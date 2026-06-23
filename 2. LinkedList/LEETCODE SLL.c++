@@ -96,7 +96,7 @@ public:
 // Output: [5,4,3,2,1]
 
 
-// 19 Remove Nth Node From End of List
+// 19 Remove Nth Node From End of List          BRUTE FORCE SOLUTION  O(n) TC and O(n) SC
 /**
  * Definition for singly-linked list.
  * struct ListNode {
@@ -139,6 +139,44 @@ public:
 // Input: head = [1,2,3,4,5], n = 2
 // Output: [1,2,3,5]
 // Explanation: Given n will always be valid. 1 ≤ n ≤ sz, where sz is the size of the linked list.
+
+
+// 19 Remove Nth Node From End of List          OPTIMAL SOLUTION  O(n) TC and O(1) SC
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int n) {
+        ListNode* dimmy = new ListNode(0);
+        dimmy->next = head;
+
+        ListNode* slow = dimmy;
+        ListNode* fast = dimmy;
+
+        for(int i=0;i<n;i++){
+            fast = fast->next;
+        }
+        while(fast->next != NULL){
+            slow = slow->next;
+            fast = fast->next;
+        }
+        ListNode* delnode = slow->next;
+        slow->next = slow -> next -> next;
+        delete delnode;
+        return dimmy->next;
+    }
+};
+// Input: head = [1,2,3,4,5], n = 2
+// Output: [1,2,3,5]
+// explanation: Given n will always be valid. 1 ≤ n ≤ sz, where sz is the size of the linked list.
 
 
 // 141 Linked List Cycle                     TC O(n) and SC O(1)
@@ -213,3 +251,164 @@ public:
 //     ↑       ↓
 //     └───────┘
 // Explanation: There is a cycle in the linked list, where tail connects to the second node. So return the second node.
+
+
+// 328 Odd Even Linked List                 TC O(n) and SC O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* oddEvenList(ListNode* head) {
+        ListNode* odd = head;
+        ListNode* even = head->next;
+        
+        ListNode* evenHead = even;
+        while(even != NULL && even->next != NULL){
+            odd->next = even->next;
+            odd = odd->next;
+
+            even->next = odd->next;
+            even = even->next;
+        }
+
+        odd ->next = evenHead;
+        return head;
+    }
+};
+// Input: head = [1,2,3,4,5]
+// Output: [1,3,5,2,4]
+// Explanation: The first node is the odd node, the second node is the even node, and so on ... Note that the relative order inside both the even and odd groups should remain as it was in the input. The first node of the even group (node 2) should follow the last node of the odd group (node 5).
+
+
+// 234 Palindrome Linked List                 TC O(n) and SC O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+ListNode* reversell(ListNode* head) {
+    ListNode* prev = NULL;
+    ListNode* curr = head;
+    ListNode* next = NULL;
+
+    while (curr != NULL) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}
+
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        if (head == NULL || head->next == NULL) {
+            return true;
+        }
+        ListNode* slow = head;
+        ListNode* fast = head;
+        while(fast != NULL && fast->next){
+            slow = slow -> next;
+            fast = fast ->next->next;
+        }
+
+        // If the list has an odd number of elements, move slow one step further to skip the middle element
+        if(fast!=NULL){
+            slow = slow->next;
+        }
+        ListNode* secondHalf = reversell(slow);
+        
+        ListNode* FirstHalf = head;
+        ListNode* temp = secondHalf;
+
+        while(temp != NULL){
+            if (FirstHalf->val != temp->val) {
+                return false;
+            }
+            temp = temp->next;
+            FirstHalf = FirstHalf->next;
+        }
+        return true;
+    }
+};
+// Input: head = [1,2,2,1]
+// Output: true
+
+// Input: head = [1,2]
+// Output: false
+// Explanation: The first node is the odd node, the second node is the even node, and so on ... Note that the relative order inside both the even and odd groups should remain as it was in the input. The first node of the even group (node 2) should follow the last node of the odd group (node 5).
+
+
+
+// 92 Reverse Linked List II                 TC O(n) and SC O(1)
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+ListNode* reversell(ListNode* temp, int cnt) {
+    ListNode* prev = NULL;
+    ListNode* curr = temp;
+    ListNode* next = NULL;
+
+    while(curr != NULL && cnt != 0){
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+        cnt--;
+    }
+    return prev;
+}
+class Solution {
+public:
+    ListNode* reverseBetween(ListNode* head, int left, int right) {
+        if(!head || left==right){
+            return head;
+        }
+
+        ListNode* dimmy = new ListNode(0);
+        dimmy->next = head;
+
+        ListNode* prev = dimmy;
+        for (int i = 1; i < left; i++) {
+            prev = prev->next;
+        }
+
+        ListNode* start = prev->next;
+        ListNode* endnext = start;
+
+        int cnt = right - left + 1;
+
+        for(int i=0;i<cnt;i++){
+            endnext = endnext->next;
+        }
+        ListNode* reverse = reversell(start, cnt);
+        prev->next = reverse;
+        start->next = endnext;
+        
+        return dimmy->next;
+    }
+};
+// Input: head = [1,2,3,4,5], left = 2, right = 4
+// Output: [1,4,3,2,5]
+// Explanation: Reverse the nodes from position 2 to 4. The first node is the odd node, the second node is the even node, and so on ... Note that the relative order inside both the even and odd groups should remain as it was in the input. The first node of the even group (node 2) should follow the last node of the odd group (node 5).
