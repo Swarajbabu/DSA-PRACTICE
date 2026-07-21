@@ -1,7 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-
 //  * Definition for singly-linked list.              Br
  struct ListNode {
     int val;
