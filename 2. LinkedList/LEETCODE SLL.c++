@@ -1,14 +1,15 @@
-#include <bits/stdc++.h>
+#include<iostream>
+#include<bits/stdc++.h>
 using namespace std;
 
 //  * Definition for singly-linked list.              Br
- struct ListNode {
+struct ListNode {
     int val;
     ListNode *next;
     ListNode() : val(0), next(nullptr) {}
     ListNode(int x) : val(x), next(nullptr) {}
     ListNode(int x, ListNode *next) : val(x), next(next) {}
- };
+};
 
 // 876 Find the Middle of the Linked List           BRUTE FORCE SOLUTION  O(n) TC and O(n) SC 
 class Solution {
@@ -20,7 +21,6 @@ public:
             cnt++;
             temp = temp->next;
         }
-        
         ListNode* temp1 = head;
         ListNode* Val;
         int ccnt = cnt/2;
@@ -160,7 +160,7 @@ public:
         ListNode* slow = dimmy;
         ListNode* fast = dimmy;
 
-        for(int i=0;i<n;i++){
+         for(int i=0;i<n;i++){
             fast = fast->next;
         }
         while(fast->next != NULL){
@@ -465,4 +465,185 @@ public:
 // Output: 6
 // nth node from the start is 5, and the nth node from the end is 1. The twin sum is 5 + 1 = 6. The maximum twin sum is 6.
 // Explanation: The maximum twin sum is 6. The nodes forming the twin sum are 5 and 1, which are at positions 1 and 4 respectively.
+
+
+// 24. Swap Nodes in Pairs
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        if (head == NULL) {
+            return NULL;
+        }
+        if (head->next == NULL) {
+            return head;
+        }
+
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+
+        ListNode* curr = dummy;
+        while (curr->next && curr->next->next) {
+            ListNode* first = curr->next;
+            ListNode* second = curr->next->next;
+
+            first->next = second->next;
+            second->next = first;
+            curr ->next = second;
+    
+            curr = first;
+
+        }
+        return dummy->next;
+    }
+};
+// Input: head = [1,2,3,4]
+// Output: [2,1,4,3]
+
+
+
+// 61. Rotate List
+ListNode* change(ListNode* head){
+    if(head == NULL || head->next == NULL)
+        return head;
+    
+    ListNode* prev = NULL;
+    ListNode* temp = head;
+    while(temp->next != NULL){
+        prev = temp;
+        temp = temp->next;
+    }
+    temp->next = head;
+    prev->next = NULL;
+    return temp;
+}
+
+class Solution {
+public:
+    ListNode* rotateRight(ListNode* head, int k) {
+        if(head == NULL || head->next == NULL || k ==0){
+            return head;
+        }
+        ListNode* temp = head;
+        int cnt = 0;
+        while(temp != NULL){
+            cnt = cnt + 1;
+            temp = temp->next;
+        }
+        k = k % cnt;
+        for(int i=0;i<k;i++){
+            head = change(head);
+        }
+        return head;
+    }
+};
+// Input: head = [1,2,3,4,5], k = 2
+// Output: [3,4,5,1,2]
+// Rotation 1 : 5 → 1 → 2 → 3 → 4
+// Rotation 2 : 4 → 5 → 1 → 2 → 3
+
+
+// 21. Merge Two Sorted Lists
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+        ListNode* dummy = new ListNode(0);
+        ListNode* tail = dummy; 
+        while(list1!= NULL && list2!=NULL){
+            if(list1->val <= list2->val){
+                tail->next = list1;
+                list1 = list1->next;
+            }else{
+                tail->next = list2;
+                list2 = list2->next;
+            }
+            tail = tail->next;
+        }
+        if(list1==NULL){
+            tail->next = list2;
+        }else{
+            tail->next = list1;
+        }
+        return dummy->next;
+    }
+};
+// Input: list1 = [1,2,4], list2 = [1,3,4]
+// Output: [1,1,2,3,4,4]
+// Explanation: The merged list in sorted order is 1 → 1 → 2 → 3 → 4 → 4.
+
+
+// 83. Remove Duplicates from Sorted List       TC O(n) and SC O(1)
+class Solution {
+public:
+    ListNode* deleteDuplicates(ListNode* head) {
+        if (head == NULL || head->next == NULL)
+            return head;
+        ListNode* left = head;
+        ListNode* right = head->next;
+        while (right != NULL) {
+            if (left->val != right->val) {
+                left->next = right;
+                left = left->next;
+            }
+            right = right->next;
+        }
+        left->next = NULL;                  // Remove duplicates at the end
+        return head;
+    }
+};
+// Input: head = [1,1,2]
+// Output: [1,2]
+// Input: head = [1,1,2,3,3]
+// Output: [1,2,3]
+
+
+// 143. Reorder List                    TC O(n) and SC O(1)
+ListNode* reverssll(ListNode* head) {
+    ListNode* prev = NULL;
+    ListNode* curr = head;
+    ListNode* next = NULL;
+    while (curr != NULL) {
+        next = curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    return prev;
+}
+class Solution {
+public:
+    void reorderList(ListNode* head) {
+        if (head == NULL || head->next == NULL)
+            return;
+        ListNode* slow = head;
+        ListNode* fast = head;
+
+        while (fast->next != NULL && fast->next->next != NULL) {
+            slow = slow->next;
+            fast = fast->next->next;
+        }
+        // Split the list into two halves
+        ListNode* reverse = slow->next;
+        slow->next = NULL;
+
+        reverse = reverssll(reverse);
+
+        ListNode* temp = head;
+        while (reverse != NULL) {
+            ListNode* next0 = temp->next;
+            ListNode* next1 = reverse->next;
+
+            temp->next = reverse;
+            reverse->next = next0; 
+
+            temp = next0;
+            reverse = next1;
+        }
+    }
+};
+// Input: head = [1,2,3,4]
+// Output: [1,4,2,3]
+// Input: head = [1,2,3,4,5]
+// Output: [1,5,2,4,3]
+
+
 

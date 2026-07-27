@@ -105,8 +105,7 @@ void insert_at_bottem(stack<int> &s,int val){
         s.push(val);
         return;
     }
-    int temp = s.top();
-    s.pop();
+    int temp = s.top();s.pop();
     insert_at_bottem(s,val);
     s.push(temp);
 }
