@@ -59,6 +59,26 @@ class TwoPointers {
         return ans;
     }
 
+    // 
+    public int maxArea(int[] height) {
+        int n = height.length;
+        int l = 0;
+        int r = n - 1;
+        int w, min, area = 0;
+
+        while (l < r) {
+            min = Math.min(height[l], height[r]);
+            w = r - l;
+            area = Math.max(area, min * w);
+            if (height[l] != min) {
+                r--;
+                continue;
+            }
+            l++;
+        }
+        return area;
+    }
+
     
     public static void main(String[] args) {
         TwoPointers solution = new TwoPointers();

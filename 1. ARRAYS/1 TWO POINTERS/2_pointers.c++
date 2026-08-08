@@ -312,11 +312,11 @@ public:
 
         int water = 0;
 
-        while(left<right){ 
+        while(left<right){
             if(leftmax < rightmax){
                 left++;
                 leftmax = max(leftmax,height[left]);
-                water += leftmax - height[left]; 
+                water += leftmax - height[left];
             }
             else{
                 right--;
@@ -324,7 +324,6 @@ public:
                 water += rightmax - height[right];
             }
         }
-
         return water;
     }
 };
