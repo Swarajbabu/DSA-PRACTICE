@@ -40,6 +40,62 @@ class Solution {
 // - [9,9,9] which does not meet the requirements because the element 9 is repeated.
 
 
+// 713. Subarray Product Less Than K      tc: o(n) and sc: o(1) // 
+class Solution1 {
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        if (k <= 1) {
+            return 0;
+        }
+        int n = nums.length;
+        int l = 0;
+        int p = 1;
+        int cnt = 0;
+        for (int r = 0; r < n; r++) {
+            p = p * nums[r];
+            while (p >= k) {
+                p = p / nums[l];
+                l++;
+            }
+            cnt = cnt + (r - l + 1);
+        }
+        return cnt;
+    }
+}
+// Input: nums = [10,5,2,6], k = 100
+// Output: 8
+// Explanation: The 8 subarrays that have product less than 100 are:
+// [10], [5], [2], [6], [10,5], [5,2], [2,6], [5,2,6]
+
+
+// 904. Fruit Into Baskets      tc: o(n) and sc: o(1) //
+class Solution2 {
+    public int totalFruit(int[] nums) {
+        HashMap<Integer, Integer> mp = new HashMap<>();
+        int n = nums.length;
+        int l = 0;
+        int max_cnt = 0;
+        for (int r = 0; r < n; r++) {
+            mp.put(nums[r],mp.getOrDefault(nums[r],0) + 1);
+            while(mp.size()>2){
+                mp.put(nums[l],mp.get(nums[l]) - 1);
+                if(mp.get(nums[l]) == 0){
+                    mp.remove(nums[l]);
+                }
+                l++;
+            }
+            max_cnt = Math.max(max_cnt,(r-l+1));
+        }
+        return max_cnt;
+    }
+}
+// Input: fruits = [1,2,1]
+// Output: 3
+// Explanation: We can pick from index 0 to 2. [1, 2, 1]
+
+// Input: fruits = [0,1,2,2]
+// Output: 3
+// Explanation: We can pick from index 1 to 3. [1, 2, 2]
+
 public class slidingWindow {
 
 }
