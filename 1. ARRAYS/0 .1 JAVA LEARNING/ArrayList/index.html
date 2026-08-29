@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickCart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12181B;
+    --paper:#F3EFE6;
+    --citrus:#FF6B35;
+    --leaf:#4C7A5B;
+    --brass:#B08D57;
+    --line: rgba(243,239,230,0.14);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--paper);
+    font-family:'Inter', sans-serif;
+    min-height:100vh;
+  }
+  a{color:inherit;}
+
+  /* HEADER */
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 5vw;
+    border-bottom:1px solid var(--line);
+    position:sticky; top:0; background:var(--ink); z-index:10;
+  }
+  .logo{
+    font-family:'Archivo Black', sans-serif;
+    font-size:1.5rem;
+    letter-spacing:-0.02em;
+  }
+  .logo span{color:var(--citrus);}
+  .cart-btn{
+    display:flex; align-items:center; gap:10px;
+    background:transparent;
+    border:1px solid var(--line);
+    color:var(--paper);
+    padding:10px 16px;
+    border-radius:100px;
+    font-family:'Inter'; font-weight:600; font-size:0.9rem;
+    cursor:pointer;
+    transition:border-color .2s ease;
+  }
+  .cart-btn:hover{border-color:var(--citrus);}
+  .cart-count{
+    background:var(--citrus);
+    color:var(--ink);
+    font-family:'IBM Plex Mono';
+    font-weight:600;
+    font-size:0.75rem;
+    min-width:20px; height:20px;
+    border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    padding:0 4px;
+  }
+
+  /* HERO */
+  .hero{
+    padding:64px 5vw 40px;
+    max-width:900px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono';
+    color:var(--brass);
+    font-size:0.8rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    margin-bottom:16px;
+  }
+  h1{
+    font-family:'Archivo Black', sans-serif;
+    font-size:clamp(2.2rem, 5vw, 4rem);
+    line-height:1.05;
+    letter-spacing:-0.01em;
+  }
+  h1 em{
+    color:var(--citrus);
+    font-style:normal;
+  }
+  .hero p{
+    margin-top:18px;
+    font-size:1.05rem;
+    color:rgba(243,239,230,0.7);
+    max-width:520px;
+    line-height:1.6;
+  }
+
+  /* MAIN LAYOUT */
+  .layout{
+    display:flex;
+    gap:32px;
+    padding:20px 5vw 80px;
+    align-items:flex-start;
+  }
+
+  /* PRODUCT GRID */
+  .grid{
+    flex:1;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(220px, 1fr));
+    gap:18px;
+  }
+  .card{
+    background:rgba(243,239,230,0.04);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px;
+    display:flex; flex-direction:column; gap:10px;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .card:hover{
+    transform:translateY(-3px);
+    border-color:rgba(255,107,53,0.4);
+  }
+  .card .emoji{
+    font-size:2.4rem;
+    line-height:1;
+  }
+  .card h3{
+    font-size:1.05rem;
+    font-weight:600;
+  }
+  .card .tag{
+    font-family:'IBM Plex Mono';
+    font-size:0.7rem;
+    color:var(--leaf);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+  }
+  .card .row{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:auto;
+    padding-top:10px;
+  }
+  .card .price{
+    font-family:'IBM Plex Mono';
+    font-weight:600;
+    color:var(--brass);
+    font-size:1rem;
+  }
+  .add-btn{
+    background:var(--citrus);
+    color:var(--ink);
+    border:none;
+    padding:8px 14px;
+    border-radius:8px;
+    font-weight:700;
+    font-size:0.85rem;
+    cursor:pointer;
+    transition:filter .15s ease, transform .1s ease;
+  }
+  .add-btn:hover{filter:brightness(1.08);}
+  .add-btn:active{transform:scale(0.96);}
+  .add-btn.added{
+    background:var(--leaf);
+    color:var(--paper);
+  }
+
+  /* RECEIPT / CART */
+  .receipt{
+    width:300px;
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:2px;
+    padding:24px 22px 30px;
+    position:sticky;
+    top:100px;
+    font-family:'IBM Plex Mono';
+    box-shadow:0 20px 40px rgba(0,0,0,0.35);
+    position:relative;
+  }
+  .receipt::after{
+    content:"";
+    position:absolute;
+    left:0; right:0; bottom:-10px;
+    height:20px;
+    background-image: linear-gradient(-45deg, var(--paper) 8px, transparent 0), linear-gradient(45deg, var(--paper) 8px, transparent 0);
+    background-position:bottom;
+    background-size:16px 20px;
+    background-repeat:repeat-x;
+  }
+  .receipt h4{
+    text-align:center;
+    font-size:0.95rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    border-bottom:1px dashed rgba(18,24,27,0.3);
+    padding-bottom:14px;
+    margin-bottom:14px;
+  }
+  .receipt-empty{
+    text-align:center;
+    font-size:0.8rem;
+    color:rgba(18,24,27,0.5);
+    padding:20px 0;
+  }
+  .line-item{
+    display:flex; justify-content:space-between;
+    font-size:0.8rem;
+    padding:6px 0;
+    opacity:0;
+    animation:stamp .35s ease forwards;
+  }
+  @keyframes stamp{
+    from{opacity:0; transform:translateY(-4px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  .line-item .name{max-width:170px;}
+  .line-item .qty{color:rgba(18,24,27,0.5); margin-left:4px;}
+  .receipt-total{
+    border-top:1px dashed rgba(18,24,27,0.3);
+    margin-top:12px;
+    padding-top:12px;
+    display:flex; justify-content:space-between;
+    font-weight:600;
+    font-size:0.95rem;
+  }
+  .checkout-btn{
+    width:100%;
+    margin-top:18px;
+    background:var(--ink);
+    color:var(--paper);
+    border:none;
+    padding:12px;
+    border-radius:6px;
+    font-family:'Inter'; font-weight:700; font-size:0.85rem;
+    cursor:pointer;
+  }
+
+  @media (max-width: 780px){
+    .layout{flex-direction:column;}
+    .receipt{width:100%; position:static;}
+  }
+
+  footer{
+    text-align:center;
+    padding:26px;
+    color:rgba(243,239,230,0.4);
+    font-size:0.8rem;
+    border-top:1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Quick<span>Cart</span></div>
+  <button class="cart-btn" onclick="scrollToReceipt()">
+    Cart <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<section class="hero">
+  <div class="eyebrow">Delivered in 12 minutes</div>
+  <h1>Groceries, <em>quick.</em><br>Cart, quicker.</h1>
+  <p>Fresh essentials picked for a fast top-up shop. Add what you need — the receipt on the right fills in as you go, just like the till at checkout.</p>
+</section>
+
+<div class="layout">
+  <div class="grid" id="productGrid"></div>
+
+  <aside class="receipt" id="receipt">
+    <h4>Your Receipt</h4>
+    <div id="receiptBody">
+      <div class="receipt-empty" id="emptyMsg">— no items yet —</div>
+    </div>
+    <div class="receipt-total" id="receiptTotal" style="display:none;">
+      <span>Total</span>
+      <span id="totalValue">$0.00</span>
+    </div>
+    <button class="checkout-btn" onclick="checkout()">Checkout</button>
+  </aside>
+</div>
+
+<footer>QuickCart — demo storefront for RBAC / EC2 deployment exercise</footer>
+
+<script>
+  const products = [
+    { id:1, name:"Avocados (4pk)", tag:"Fresh", price:4.49, emoji:"🥑" },
+    { id:2, name:"Sourdough Loaf", tag:"Bakery", price:3.99, emoji:"🍞" },
+    { id:3, name:"Whole Milk 1L", tag:"Dairy", price:1.79, emoji:"🥛" },
+    { id:4, name:"Free-range Eggs", tag:"Dairy", price:3.29, emoji:"🥚" },
+    { id:5, name:"Roma Tomatoes", tag:"Fresh", price:2.49, emoji:"🍅" },
+    { id:6, name:"Cold Brew Can", tag:"Drinks", price:2.99, emoji:"🥤" },
+    { id:7, name:"Basmati Rice 1kg", tag:"Pantry", price:5.49, emoji:"🍚" },
+    { id:8, name:"Dark Chocolate", tag:"Snacks", price:2.19, emoji:"🍫" },
+  ];
+
+  const cart = {}; // id -> qty
+
+  function renderProducts(){
+    const grid = document.getElementById('productGrid');
+    grid.innerHTML = products.map(p => `
+      <div class="card">
+        <div class="emoji">${p.emoji}</div>
+        <h3>${p.name}</h3>
+        <div class="tag">${p.tag}</div>
+        <div class="row">
+          <div class="price">$${p.price.toFixed(2)}</div>
+          <button class="add-btn" id="btn-${p.id}" onclick="addToCart(${p.id})">Add</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function addToCart(id){
+    cart[id] = (cart[id] || 0) + 1;
+    renderReceipt();
+    updateCartCount();
+
+    const btn = document.getElementById('btn-' + id);
+    btn.textContent = "Added";
+    btn.classList.add('added');
+    setTimeout(() => {
+      btn.textContent = "Add";
+      btn.classList.remove('added');
+    }, 700);
+  }
+
+  function updateCartCount(){
+    const total = Object.values(cart).reduce((a,b) => a+b, 0);
+    document.getElementById('cartCount').textContent = total;
+  }
+
+  function renderReceipt(){
+    const body = document.getElementById('receiptBody');
+    const totalRow = document.getElementById('receiptTotal');
+    const entries = Object.entries(cart).filter(([_,qty]) => qty > 0);
+
+    if(entries.length === 0){
+      body.innerHTML = '<div class="receipt-empty">— no items yet —</div>';
+      totalRow.style.display = 'none';
+      return;
+    }
+
+    let total = 0;
+    body.innerHTML = entries.map(([id, qty]) => {
+      const p = products.find(p => p.id == id);
+      const lineTotal = p.price * qty;
+      total += lineTotal;
+      return `
+        <div class="line-item">
+          <span class="name">${p.name}<span class="qty">x${qty}</span></span>
+          <span>$${lineTotal.toFixed(2)}</span>
+        </div>
+      `;
+    }).join('');
+
+    totalRow.style.display = 'flex';
+    document.getElementById('totalValue').textContent = '$' + total.toFixed(2);
+  }
+
+  function scrollToReceipt(){
+    document.getElementById('receipt').scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  function checkout(){
+    const total = Object.values(cart).reduce((a,b)=>a+b, 0);
+    if(total === 0){
+      alert("Your cart is empty — add something first.");
+      return;
+    }
+    alert("Order placed! This is a static demo, so nothing was actually charged.");
+  }
+
+  renderProducts();
+</script>
+
+</body>
+</html>
