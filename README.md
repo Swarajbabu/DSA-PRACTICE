@@ -41,7 +41,7 @@ DSA/
 │   ├── ArrayList/                       # Dynamic arrays & interactive demo
 │   ├── Arrays/                          # Array algorithms & two pointers
 │   ├── HashMap/                         # Key-value maps & frequency counting
-│   ├── OOPS/                            # OOP Practice (Class/Object, Inheritance, Encapsulation)
+│   ├── OOPS/                            # OOP Practice (Class/Object, Inheritance, Encapsulation, Polymorphism)
 │   ├── Strings/                         # String algorithms & palindromes
 │   ├── SubArray/                        # Sliding window & prefix sum problems
 │   └── java_test/                       # Java test scripts
