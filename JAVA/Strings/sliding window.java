@@ -90,3 +90,39 @@ class Solution2 {
 // TC: O(n)
 // SC: O(1)
 
+
+// ==========================================
+// 2. LeetCode 3. Longest Substring Without Repeating Characters
+// ==========================================
+class Solution3 {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        int max_val = Integer.MIN_VALUE;
+        int l = 0;
+        HashMap<Character, Integer> mp = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            char ch = s.charAt(i);
+            mp.put(ch, mp.getOrDefault(ch, 0) + 1);
+
+            while (mp.get(ch) > 1) {
+                char lch = s.charAt(l);
+                mp.put(lch, (mp.get(lch) - 1));
+                if (mp.get(lch) == 0) {
+                    mp.remove(lch);
+                }
+                l++;
+            }
+
+            max_val = Math.max(max_val, mp.size());
+        }
+
+        return max_val ==  Integer.MIN_VALUE ? 0 : max_val;
+    }
+}
+// Example:
+// Input: s = "abcabcbb"
+// Output: 3
+//
+// TC: O(n)
+// SC: O(min(n, m))
+
